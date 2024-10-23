@@ -1,24 +1,25 @@
 import pymysql
 from app import app
-from config_db import db_config 
+from config_db import db_config
 import pymysql
 
 from flask import jsonify, request
 
 #create
-@app.route('/cadastrar', methods=['POST'])
+@app.route('/cadastar', methods=['POST'])
 def create_customer():
     try:
         _json = request.json
-        _name = _json['nome_cliente']
-        _surname = _json['sobrenome_cliente']
-        _email = _json['email_cliente']
-        _phone = _json['telefone_celular_cliente']
-        _address = _json['endereco_cliente']
-        _age = _json['idade_cliente']
-        _cpf = _json['cpf_cliente']
+        _name = _json['nome_produto']
+        _barcode = _json['cod_barras_produto']
+        _manufacturer = _json['fabricante_produto']
+        _manDate = _json['data_fabircacao_produto']
+        _expiration = _json['data_validade_produto']
+        _category = _json['categoria_produto']
+        _weight = _json['peso_produto']
+        _price = _json['preco_produto']
 
-        if _name and _surname and _email and _phone and _address and _age and _cpf and request.method == 'POST':
+        if _name and _barcode and _manufacturer and _manDate and _expiration and _category and _weight and _price and request.method == 'POST':
             conn = pymysql.connect(
                 host=db_config['host'],
                 user=db_config['user'],
@@ -27,15 +28,15 @@ def create_customer():
                 cursorclass=pymysql.cursors.DictCursor
             )
             cursor = conn.cursor()
-            sqlQuery = """INSERT INTO cliente(nome_cliente, sobrenome_cliente, email_cliente, 
-                telefone_celular_cliente, endereco_cliente, idade_cliente, cpf_cliente) 
-                VALUES(%s, %s, %s, %s, %s, %s, %s)"""
-            bindData = (_name, _surname, _email, _phone, _address, _age, _cpf)
+            sqlQuery = """INSERT INTO produtos(nome_produto, cod_barras_produto, fabricante_produto, 
+                data_fabircacao_produto, data_validade_produto, categoria_produto, peso_produto, preco_produto) 
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"""
+            bindData = (_name, _barcode, _manufacturer, _manDate, _expiration, _category, _weight, _price)
             cursor.execute(sqlQuery, bindData)
             conn.commit()
-            resp = jsonify({'message': 'Cliente inserido com sucesso!'})
-            resp.status_code = 201
-            return resp
+            response = jsonify({'message': 'Produto inserido com sucesso!'})
+            response.status_code = 201
+            return response
         else:
             return jsonify({'error': 'Dados incorretos'}), 400
 
@@ -49,7 +50,7 @@ def create_customer():
         if conn:
             conn.close()
 
-#read all
+#read one
 @app.route('/buscar', methods=['GET'])
 def customer():
     try:
@@ -61,11 +62,11 @@ def customer():
             cursorclass=pymysql.cursors.DictCursor
         )
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM cliente")
+        cursor.execute("SELECT * FROM produtos")
         customerRows = cursor.fetchall()
-        resp = jsonify(customerRows)
-        resp.status_code = 200
-        return resp
+        response = jsonify(customerRows)
+        response.status_code = 200
+        return response
     
     except Exception as e:
         print(e)
@@ -76,8 +77,8 @@ def customer():
         conn.close()
 
 #read one
-@app.route('/buscar/<string:nome_cliente>', methods=['GET'])
-def customer_details(nome_cliente):
+@app.route('/buscar/<string:nome_produto>', methods=['GET'])
+def customer_details(nome_produto):
     try:
         conn = pymysql.connect(
             host=db_config['host'],
@@ -88,18 +89,17 @@ def customer_details(nome_cliente):
         )
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT nome_cliente, sobrenome_cliente, email_cliente, telefone_celular_cliente, 
-            endereco_cliente, idade_cliente, cpf_cliente 
-            FROM cliente 
-            WHERE nome_cliente = %s
-        """, (nome_cliente,))
+            SELECT nome_produto, cod_barras_produto, fabricante_produto, 
+            data_fabircacao_produto, data_validade_produto, categoria_produto, peso_produto, preco_produto 
+            FROM produtos 
+            WHERE nome_produto = %s
+        """, (nome_produto,))
         customerRow = cursor.fetchone()
-
         if not customerRow:
             return jsonify({'error': 'Cliente não encontrado'}), 404
-        resp = jsonify(customerRow)
-        resp.status_code = 200
-        return resp
+        response = jsonify(customerRow)
+        response.status_code = 200
+        return response
 
     except Exception as e:
         print(e)
@@ -118,16 +118,17 @@ def update_customer():
     cursor = None
     try:
         _json = request.json
-        _id = _json['id_cliente']
-        _name = _json['nome_cliente']
-        _surname = _json['sobrenome_cliente']
-        _email = _json['email_cliente']
-        _phone = _json['telefone_celular_cliente']
-        _address = _json['endereco_cliente']
-        _age = _json['idade_cliente']
-        _cpf = _json['cpf_cliente']
-
-        if _name and _surname and _email and _phone and _address and _age and _cpf and _id and request.method == 'PUT':
+        _id = _json['id_produto']
+        _name = _json['nome_produto']
+        _barcode = _json['cod_barras_produto']
+        _manufacturer = _json['fabricante_produto']
+        _manDate = _json['data_fabircacao_produto']
+        _expiration = _json['data_validade_produto']
+        _category = _json['categoria_produto']
+        _weight = _json['peso_produto']
+        _price = _json['preco_produto']
+        
+        if _name and _barcode and _manufacturer and _manDate and _expiration and _category and _weight and _price and _id and request.method == 'POST':
             conn = pymysql.connect(
                 host=db_config['host'],
                 user=db_config['user'],
@@ -137,22 +138,24 @@ def update_customer():
             )
             cursor = conn.cursor()
             sqlQuery = """
-                UPDATE cliente 
-                SET nome_cliente=%s, sobrenome_cliente=%s, email_cliente=%s, 
-                telefone_celular_cliente=%s, endereco_cliente=%s, idade_cliente=%s, cpf_cliente=%s 
-                WHERE id_cliente=%s
+                UPDATE produtos 
+                SET nome_produto=%s, cod_barras_produto=%s, fabricante_produto=%s, data_fabircacao_produto=%s,
+                data_validade_produto=%s, categoria_produto=%s, peso_produto=%s, preco_produto=%s
+                WHERE id_produto=%s
             """
-            bindData = (_name, _surname, _email, _phone, _address, _age, _cpf, _id)
+            bindData = (_name, _barcode, _manufacturer, _manDate, _expiration, _category, _weight, _price, _id)
             cursor.execute(sqlQuery, bindData)
             conn.commit()
-            response = jsonify('Informações do cliente atualizadas!')
+            response = jsonify('Informações do produto atualizadas!')
             response.status_code = 200
             return response
         else:
             return jsonify({'error': 'Dados invalidos ou incompletos'}), 400
+
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
+
     finally:
         if cursor:
             cursor.close()
@@ -160,8 +163,8 @@ def update_customer():
             conn.close()
 
 #delete
-@app.route('/remover/<string:nome_cliente>', methods=['DELETE'])
-def delete_customer(nome_cliente):
+@app.route('/remover/<string:nome_produto>', methods=['DELETE'])
+def delete_customer(nome_produto):
     try:
         conn = pymysql.connect(
             host=db_config['host'],
@@ -171,11 +174,11 @@ def delete_customer(nome_cliente):
             cursorclass=pymysql.cursors.DictCursor
         )
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM cliente WHERE nome_cliente=%s", (nome_cliente,))
+        cursor.execute("DELETE FROM produtos WHERE nome=%s", (nome_produto,))
         conn.commit()
-        resp = jsonify('Informações do cliente apagadas com sucesso!')
-        resp.status_code = 200
-        return resp
+        response = jsonify('Informações do produtos removidas com sucesso!')
+        response.status_code = 200
+        return response
 
     except Exception as e:
         print(e)
@@ -186,7 +189,6 @@ def delete_customer(nome_cliente):
             cursor.close()
         if conn:
             conn.close()
-
 
 @app.errorhandler(404)
 def showMessage(error=None):
