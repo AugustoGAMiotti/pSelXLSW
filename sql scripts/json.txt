@@ -1,0 +1,68 @@
+Cliente
+
+{
+    "nome_cliente": "Jonatan Johnson",
+    "email_cliente": "jonatanj@example.com",
+    "telefone_cliente": "55512345678",
+    "endereco_cliente": "123 Street Name",
+    "idade_cliente": 30,
+    "cpf_cliente": "22344618968"
+}
+
+{
+    "nome_cliente": "Alberto Ferreira",
+    "email_cliente": "Ferreira@example.com",
+    "telefone_cliente": "51520130260",
+    "endereco_cliente": "456 Street Name",
+    "idade_cliente": 25,
+    "cpf_cliente": "97362534186"
+}
+
+{
+    "nome_cliente": "Alvaro Martins",
+    "email_cliente": "martins@example.com",
+    "telefone_cliente": "19643441950",
+    "endereco_cliente": "789 Street Name",
+    "idade_cliente": 40,
+    "cpf_cliente": "38742571663"
+}
+
+{
+    "id_cliente": 2,
+    "nome_cliente": "Jonathan Johnson",
+    "email_cliente": "jonathanj@example.com",
+    "telefone_cliente": "55512345678",
+    "endereco_cliente": "123 Street Name",
+    "idade_cliente": 30,
+    "cpf_cliente": "22344618968"
+}
+
+Produtos
+
+{
+    "nome_produto": "Queijo Morro Azul",
+    "cod_barras_produto": "St9D7Tq4X5im8IGhETQC",
+    "fabricante_produto": "Pomerode",
+    "data_validade_produto": "2025-06-10",
+    "categoria_produto": "Laticineos",
+    "preco_produto": 35.00
+}
+
+{
+    "nome_produto": "Coca Cola",
+    "cod_barras_produto": "Se9WA2cgYD8m8odK6ZMI ",
+    "fabricante_produto": "CoCa Co.",
+    "data_validade_produto": "2025-10-30",
+    "categoria_produto": "Bebidas",
+    "preco_produto": 35.00
+}
+
+{
+    "id_produto": 4,
+    "nome_produto": "Coca Cola",
+    "cod_barras_produto": "Se9WA2cgYD8m8odK6ZMI ",
+    "fabricante_produto": "Coca Co.",
+    "data_validade_produto": "2025-10-30",
+    "categoria_produto": "Bebidas",
+    "preco_produto": 35.00
+}
